@@ -1,4 +1,4 @@
-package day1
+package day01
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 func Part2() {
-	lines := utils.GetLines("day1/input.txt")
+	lines := utils.GetLines("day01/input.txt")
 
 	sum := 0
 
