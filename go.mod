@@ -1,3 +1,3 @@
-module day1-part1
+module github.com/Jade-Codes/adventofcode2023
 
 go 1.21

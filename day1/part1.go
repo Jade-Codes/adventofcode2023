@@ -1,4 +1,4 @@
-package main
+package day1
 
 import (
 	"bufio"
@@ -8,8 +8,8 @@ import (
 	"strconv"
 )
 
-func day1part1() {
-	filePath := "day1.txt"
+func Part1() {
+	filePath := "day1/day1.txt"
 
 	file, err := os.Open(filePath)
 	if err != nil {
