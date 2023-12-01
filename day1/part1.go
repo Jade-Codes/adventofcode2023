@@ -1,29 +1,20 @@
 package day1
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/Jade-Codes/adventofcode2023/utils"
 )
 
 func Part1() {
-	filePath := "day1/day1.txt"
-
-	file, err := os.Open(filePath)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	defer file.Close() 
-
-	scanner := bufio.NewScanner(file)
+	lines := utils.GetLines("day1/input.txt")
 
 	sum := 0
 
-	for scanner.Scan() {
-		line := scanner.Text()
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
 		re := regexp.MustCompile("^\\D*(\\d)(?:.*?(\\d))?\\D*$")
 		match := re.FindStringSubmatch(line)
 
