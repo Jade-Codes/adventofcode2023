@@ -16,7 +16,7 @@ func Part2() {
 		fmt.Println("Error:", err)
 		return
 	}
-	defer file.Close() //
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 
