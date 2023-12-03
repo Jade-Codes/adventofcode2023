@@ -19,6 +19,7 @@ func Part1() {
 
 			if char == '.' && numberString != "" {
 				sumOfNumbers += calculateNumberToAdd(lines, line, i, numberStringIndexes, numberString)
+
 				numberString = ""
 				numberStringIndexes = []int{}
 			}
@@ -44,6 +45,7 @@ func Part1() {
 
 			if j == len(line)-1 {
 				sumOfNumbers += calculateNumberToAdd(lines, line, i, numberStringIndexes, numberString)
+
 				numberString = ""
 				numberStringIndexes = []int{}
 			}

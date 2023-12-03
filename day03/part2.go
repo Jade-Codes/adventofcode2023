@@ -39,19 +39,19 @@ func Part2() {
 	fmt.Println("Day 3, Part 2:", sumOfNumbers)
 }
 
-func findSurroundingNumbers(lines []string, line string, starIndex int, rowIndex int) []int {
+func findSurroundingNumbers(lines []string, line string, symbolIndex int, rowIndex int) []int {
 	numbers := []int{}
 
-	checkedIndexes := [][]int{}
+	checkedIndexesMatrix := [][]int{}
 
 	for i := 0; i < len(lines); i++ {
-		checkedIndexes = append(checkedIndexes, []int{})
+		checkedIndexesMatrix = append(checkedIndexesMatrix, []int{})
 	}
 
 	for _, vector := range vectorsToCheck {
 
 		nextXIndex := rowIndex + vector[0]
-		nextYIndex := starIndex + vector[1]
+		nextYIndex := symbolIndex + vector[1]
 
 		if nextXIndex < 0 || nextXIndex >= len(lines) {
 			continue
@@ -61,35 +61,21 @@ func findSurroundingNumbers(lines []string, line string, starIndex int, rowIndex
 			continue
 		}
 
-		isAlreadyChecked := false
-
-		for xIndex, checkedIndexList := range checkedIndexes {
-
-			if xIndex == nextXIndex {
-				for _, checkedIndex := range checkedIndexList {
-					if checkedIndex == nextYIndex {
-
-						isAlreadyChecked = true
-					}
-				}
-			}
-		}
-		if isAlreadyChecked {
+		if isAlreadyChecked(checkedIndexesMatrix, nextXIndex, nextYIndex) {
 			continue
 		}
 
-		nextValueString := string(lines[nextXIndex][nextYIndex])
+		nextNumberString := string(lines[nextXIndex][nextYIndex])
+		nextNumber, nextNumberErr := strconv.Atoi(nextNumberString)
 
-		nextValueInt, nextIndexErr := strconv.Atoi(nextValueString)
-
-		if nextIndexErr != nil {
+		if nextNumberErr != nil {
 			continue
 		}
 
-		number, leftIndex, rightIndex := findFullNumberString(lines[nextXIndex], nextValueInt, nextYIndex)
+		number, leftIndex, rightIndex := findFullNumberString(lines[nextXIndex], nextNumber, nextYIndex)
 
 		for i := leftIndex; i <= rightIndex; i++ {
-			checkedIndexes[nextXIndex] = append(checkedIndexes[nextXIndex], i)
+			checkedIndexesMatrix[nextXIndex] = append(checkedIndexesMatrix[nextXIndex], i)
 		}
 
 		if number != 0 {
@@ -151,4 +137,17 @@ func findFullNumberString(line string, currentNumber int, currentIndex int) (int
 	}
 
 	return currentNumber, leftIndex, rightIndex
+}
+
+func isAlreadyChecked(checkedIndexesMatrix [][]int, nextXIndex int, nextYIndex int) bool {
+	for i, checkedIndexes := range checkedIndexesMatrix {
+		if i == nextXIndex {
+			for _, checkedIndex := range checkedIndexes {
+				if checkedIndex == nextYIndex {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
