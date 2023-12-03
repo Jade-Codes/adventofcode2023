@@ -17,37 +17,31 @@ func Part1() {
 		numberString := ""
 		for j, char := range line {
 
-			if char == '.' && numberString != "" {
+			if currentCharIsntUsed(char) && numberString != "" {
 				sumOfNumbers += calculateNumberToAdd(lines, line, i, numberStringIndexes, numberString)
-
-				numberString = ""
-				numberStringIndexes = []int{}
+				numberString, numberStringIndexes = resetNumbers(numberString, numberStringIndexes)
 			}
 
-			if char == '.' {
+			if currentCharIsntUsed(char) {
 				continue
 			}
 
-			number, numberErr := strconv.Atoi(string(char))
-
-			if numberErr != nil && numberString != "" {
+			if currentCharIsSymbol(char) {
 				number, _ := strconv.Atoi(numberString)
 				sumOfNumbers += number
-
-				numberString = ""
-				numberStringIndexes = []int{}
+				numberString, numberStringIndexes = resetNumbers(numberString, numberStringIndexes)
 
 				continue
 			}
 
+			number, _ := strconv.Atoi(string(char))
 			numberStringIndexes = append(numberStringIndexes, j)
 			numberString += strconv.Itoa(number)
 
-			if j == len(line)-1 {
+			if endOfLine(line, j) {
 				sumOfNumbers += calculateNumberToAdd(lines, line, i, numberStringIndexes, numberString)
 
-				numberString = ""
-				numberStringIndexes = []int{}
+				numberString, numberStringIndexes = resetNumbers(numberString, numberStringIndexes)
 			}
 		}
 	}
@@ -56,18 +50,8 @@ func Part1() {
 }
 
 func calculateNumberToAdd(lines []string, line string, rowIndex int, currentIndexes []int, numberString string) int {
-	for i, columnIndex := range currentIndexes {
-		canAdd := false
-
-		if i == 0 {
-			canAdd = canBeAdded(lines, line, rowIndex, columnIndex, vectorsToCheck)
-		} else if i == len(currentIndexes)-1 {
-			canAdd = canBeAdded(lines, line, rowIndex, columnIndex, vectorsToCheck)
-		} else if i > 0 && i < len(currentIndexes)-1 {
-			canAdd = canBeAdded(lines, line, rowIndex, columnIndex, vectorsToCheck)
-		}
-
-		if canAdd {
+	for _, columnIndex := range currentIndexes {
+		if canBeAdded(lines, line, rowIndex, columnIndex, vectorsToCheck) {
 			number, _ := strconv.Atoi(numberString)
 			return number
 		}
@@ -80,23 +64,17 @@ func canBeAdded(lines []string, line string, rowIndex int, columnIndex int, vect
 		nextXIndex := rowIndex + vector[0]
 		nextYIndex := columnIndex + vector[1]
 
-		if nextXIndex < 0 || nextXIndex >= len(lines) {
-			continue
-		}
-		if nextYIndex < 0 || nextYIndex >= len(line) {
+		if !indexIsInBounds(lines, nextXIndex, nextYIndex) {
 			continue
 		}
 
 		currentValue := lines[nextXIndex][nextYIndex]
-		currentValueString := string(currentValue)
 
-		if currentValueString == "." {
+		if currentCharIsntUsed(rune(currentValue)) {
 			continue
 		}
 
-		_, currentNumberErr := strconv.Atoi(currentValueString)
-
-		if currentNumberErr != nil {
+		if currentCharIsSymbol(rune(currentValue)) {
 			return true
 		}
 	}

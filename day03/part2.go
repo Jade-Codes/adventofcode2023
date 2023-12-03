@@ -15,21 +15,13 @@ func Part2() {
 	for i, line := range lines {
 		for c, char := range line {
 
-			if string(char) == "." {
+			if currentCharIsntUsed(char) {
 				continue
 			}
 
-			_, numberErr := strconv.Atoi(string(char))
-
-			if numberErr != nil {
+			if currentCharIsSymbol(char) {
 				numbers := findSurroundingNumbers(lines, line, c, i)
-				if len(numbers) > 1 {
-					numbersMultiplied := 1
-					for _, number := range numbers {
-						numbersMultiplied *= number
-					}
-					sumOfNumbers += numbersMultiplied
-				}
+				sumOfNumbers += getNumbersMultiplied(numbers)
 			}
 
 		}
@@ -53,11 +45,7 @@ func findSurroundingNumbers(lines []string, line string, symbolIndex int, rowInd
 		nextXIndex := rowIndex + vector[0]
 		nextYIndex := symbolIndex + vector[1]
 
-		if nextXIndex < 0 || nextXIndex >= len(lines) {
-			continue
-		}
-
-		if nextYIndex < 0 || nextYIndex >= len(line) {
+		if !indexIsInBounds(lines, nextXIndex, nextYIndex) {
 			continue
 		}
 
@@ -74,9 +62,7 @@ func findSurroundingNumbers(lines []string, line string, symbolIndex int, rowInd
 
 		number, leftIndex, rightIndex := findFullNumberString(lines[nextXIndex], nextNumber, nextYIndex)
 
-		for i := leftIndex; i <= rightIndex; i++ {
-			checkedIndexesMatrix[nextXIndex] = append(checkedIndexesMatrix[nextXIndex], i)
-		}
+		checkedIndexesMatrix = appendToIndexesMatrix(checkedIndexesMatrix, nextXIndex, leftIndex, rightIndex)
 
 		if number != 0 {
 			numbers = append(numbers, number)
@@ -88,6 +74,52 @@ func findSurroundingNumbers(lines []string, line string, symbolIndex int, rowInd
 func findFullNumberString(line string, currentNumber int, currentIndex int) (int, int, int) {
 	currentNumberString := strconv.Itoa(currentNumber)
 
+	leftIndex, currentNumberString := getLeftIndex(line, currentIndex, currentNumberString)
+	rightIndex, currentNumberString := getRightIndex(line, currentIndex, currentNumberString)
+
+	currentNumber, currentNumberErr := strconv.Atoi(currentNumberString)
+
+	if currentNumberErr != nil {
+		return 0, leftIndex, rightIndex
+	}
+
+	return currentNumber, leftIndex, rightIndex
+}
+
+func appendToIndexesMatrix(checkedIndexesMatrix [][]int, xIndex int, leftIndex int, rightIndex int) [][]int {
+	for i := leftIndex; i <= rightIndex; i++ {
+		checkedIndexesMatrix[xIndex] = append(checkedIndexesMatrix[xIndex], i)
+	}
+	return checkedIndexesMatrix
+}
+
+func getNumbersMultiplied(numbers []int) int {
+	if len(numbers) == 0 || len(numbers) == 1 {
+		return 0
+	}
+
+	numbersMultiplied := 1
+	for _, number := range numbers {
+		numbersMultiplied *= number
+	}
+
+	return numbersMultiplied
+}
+
+func isAlreadyChecked(checkedIndexesMatrix [][]int, nextXIndex int, nextYIndex int) bool {
+	for i, checkedIndexes := range checkedIndexesMatrix {
+		if i == nextXIndex {
+			for _, checkedIndex := range checkedIndexes {
+				if checkedIndex == nextYIndex {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+func getLeftIndex(line string, currentIndex int, currentNumberString string) (int, string) {
 	leftEndNotFound := true
 	leftIndex := int(currentIndex)
 
@@ -109,6 +141,10 @@ func findFullNumberString(line string, currentNumber int, currentIndex int) (int
 		currentNumberString = value + currentNumberString
 	}
 
+	return leftIndex, currentNumberString
+}
+
+func getRightIndex(line string, currentIndex int, currentNumberString string) (int, string) {
 	rightEndNotFound := true
 	rightIndex := int(currentIndex)
 
@@ -130,24 +166,5 @@ func findFullNumberString(line string, currentNumber int, currentIndex int) (int
 		currentNumberString = currentNumberString + value
 	}
 
-	currentNumber, currentNumberErr := strconv.Atoi(currentNumberString)
-
-	if currentNumberErr != nil {
-		return 0, leftIndex, rightIndex
-	}
-
-	return currentNumber, leftIndex, rightIndex
-}
-
-func isAlreadyChecked(checkedIndexesMatrix [][]int, nextXIndex int, nextYIndex int) bool {
-	for i, checkedIndexes := range checkedIndexesMatrix {
-		if i == nextXIndex {
-			for _, checkedIndex := range checkedIndexes {
-				if checkedIndex == nextYIndex {
-					return true
-				}
-			}
-		}
-	}
-	return false
+	return rightIndex, currentNumberString
 }
