@@ -9,8 +9,9 @@ import (
 )
 
 func Part2() {
-	sumOfPower := 0
 	lines := utils.GetLines("day02/input.txt")
+
+	sumOfPower := 0
 
 	for i := 0; i < len(lines); i++ {
 		minRedCubes := 0
