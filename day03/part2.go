@@ -23,9 +23,7 @@ func Part2() {
 				numbers := findSurroundingNumbers(lines, line, c, i)
 				sumOfNumbers += getNumbersMultiplied(numbers)
 			}
-
 		}
-
 	}
 
 	fmt.Println("Day 3, Part 2:", sumOfNumbers)
