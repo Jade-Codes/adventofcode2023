@@ -11,7 +11,7 @@ import (
 func Part1() {
 	lines := utils.GetLines("day04/input.txt")
 
-	power := float64(0)
+	totalPoints := 0
 
 	for i, line := range lines {
 		scratchCardName := fmt.Sprintf("Card %d:", i+1)
@@ -23,20 +23,16 @@ func Part1() {
 		winningNumbersArray := strings.Fields(winningNumbers)
 		playingNumbersArray := strings.Fields(playingNumbers)
 
-		numbersWon := -1
+		numbersWon := getNumbersWon(winningNumbersArray, playingNumbersArray)
 
-		for _, number := range winningNumbersArray {
-			for _, playingNumber := range playingNumbersArray {
-				if number == playingNumber {
-					numbersWon++
-				}
-			}
-		}
-
-		if numbersWon > -1 {
-			power += math.Pow(float64(2), float64(numbersWon))
+		if numbersWon > 0 {
+			totalPoints += getPoints(numbersWon)
 		}
 	}
 
-	fmt.Println("Day 4, Part 1:", power)
+	fmt.Println("Day 4, Part 1:", totalPoints)
+}
+
+func getPoints(numbersWon int) int {
+	return int(math.Pow(float64(2), float64(numbersWon-1)))
 }

@@ -10,7 +10,7 @@ import (
 func Part2() {
 	lines := utils.GetLines("day04/input.txt")
 
-	dictionary := map[int]float64{}
+	cardDictionary := map[int]int{}
 
 	for i, line := range lines {
 		currentCard := i + 1
@@ -24,36 +24,35 @@ func Part2() {
 		winningNumbersArray := strings.Fields(winningNumbers)
 		playingNumbersArray := strings.Fields(playingNumbers)
 
-		numbersWon := float64(0)
+		numbersWon := getNumbersWon(winningNumbersArray, playingNumbersArray)
 
-		dictionary[currentCard] += float64(1)
-
-		for _, number := range winningNumbersArray {
-			for _, playingNumber := range playingNumbersArray {
-
-				if number == playingNumber {
-					numbersWon++
-				}
-			}
-
-		}
-
-		if numbersWon > 0 {
-			currentValue := dictionary[currentCard]
-			nextCard := currentCard + 1
-
-			for j := nextCard; j < nextCard+int(numbersWon); j++ {
-				nextValue := dictionary[j]
-
-				dictionary[j] = nextValue + currentValue
-			}
-		}
+		cardDictionary[currentCard] += 1
+		cardDictionary = getNextCard(currentCard, numbersWon, cardDictionary)
 	}
 
-	sumOfWinnings := 0
-	for _, value := range dictionary {
-		sumOfWinnings += int(value)
-	}
+	sumOfCards := getSumOfCards(cardDictionary)
 
-	fmt.Println("Day 4, Part 2:", sumOfWinnings)
+	fmt.Println("Day 4, Part 2:", sumOfCards)
+}
+
+func getNextCard(currentCard int, numbersWon int, cardDictionary map[int]int) map[int]int {
+	if numbersWon > 0 {
+		currentAmount := cardDictionary[currentCard]
+		nextCard := currentCard + 1
+
+		for j := nextCard; j < nextCard+int(numbersWon); j++ {
+			nextAmount := cardDictionary[j]
+
+			cardDictionary[j] = nextAmount + currentAmount
+		}
+	}
+	return cardDictionary
+}
+
+func getSumOfCards(cardDictionary map[int]int) int {
+	sumOfCards := 0
+	for _, card := range cardDictionary {
+		sumOfCards += card
+	}
+	return sumOfCards
 }
