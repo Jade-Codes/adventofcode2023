@@ -22,7 +22,7 @@ func Part2() {
 
 	wayOfWinning := 0
 
-	previousTime := 0
+	prediction := 0
 	currentDistance := 0
 	remainingRaceTime := raceTime
 
@@ -31,29 +31,17 @@ func Part2() {
 	for remainingRaceTime > middleOfRace {
 
 		remainingRaceTime--
-
-		previousTime = remainingRaceTime * (currentDistance + 1)
-
 		currentDistance++
+
+		prediction = remainingRaceTime * currentDistance
 		winningDistance := winningDistance
 
-		if previousTime > winningDistance {
+		if prediction > winningDistance {
 			wayOfWinning = raceTime - currentDistance*2 + 1
 			break
 		}
 	}
 
-	fmt.Println("Day 6, Part 1:", wayOfWinning)
+	fmt.Println("Day 6, Part 2:", wayOfWinning)
 
-}
-
-func multiplyArray(ia []int) int {
-
-	total := 1
-
-	for _, i := range ia {
-		total *= i
-	}
-
-	return total
 }

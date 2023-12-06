@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func GetLines(filename string) []string {
@@ -23,4 +24,23 @@ func GetLines(filename string) []string {
 	}
 
 	return s
+}
+
+func SliceAtoi(sa []string) []int {
+	si := make([]int, 0, len(sa))
+	for _, a := range sa {
+		i, err := strconv.Atoi(a)
+		if err == nil {
+			si = append(si, i)
+		}
+	}
+	return si
+}
+
+func MultiplyArray(array []int) int {
+	total := 1
+	for _, number := range array {
+		total *= number
+	}
+	return total
 }
