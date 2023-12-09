@@ -16,21 +16,21 @@ func Part2() {
 		stringArray := strings.Fields(line)
 		intArray := utils.SliceAtoi(stringArray)
 		intArray = reverse(intArray)
-		previousIntArray := getPreviousRow2(intArray)
+		previousIntArray := getPreviousReverseRow(intArray)
 
-		total += getMissingNumber2(intArray, previousIntArray)
+		total += getFirstMissingNumber(intArray, previousIntArray)
 	}
 
-	fmt.Println("Day 9, Part 1:", total)
+	fmt.Println("Day 9, Part 2:", total)
 
 }
 
-func getMissingNumber2(intArray []int, previousIntArray []int) int {
+func getFirstMissingNumber(intArray []int, previousIntArray []int) int {
 	for i := 0; i < len(intArray)-1; i++ {
 		if intArray[i] != intArray[i+1] {
-			newIntArray := getPreviousRow2(previousIntArray)
+			newIntArray := getPreviousReverseRow(previousIntArray)
 
-			newInt := getMissingNumber2(previousIntArray, newIntArray)
+			newInt := getFirstMissingNumber(previousIntArray, newIntArray)
 			previousIntArray = append(previousIntArray, newInt)
 			break
 		}
@@ -38,7 +38,7 @@ func getMissingNumber2(intArray []int, previousIntArray []int) int {
 
 	return intArray[len(intArray)-1] - previousIntArray[len(previousIntArray)-1]
 }
-func getPreviousRow2(intArray []int) []int {
+func getPreviousReverseRow(intArray []int) []int {
 	newIntArray := []int{}
 
 	for i := 0; i < len(intArray)-1; i++ {

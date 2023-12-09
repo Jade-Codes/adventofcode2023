@@ -17,19 +17,18 @@ func Part1() {
 		intArray := utils.SliceAtoi(stringArray)
 		previousIntArray := getPreviousRow(intArray)
 
-		total += getMissingNumber(intArray, previousIntArray)
+		total += getLastMissingNumber(intArray, previousIntArray)
 	}
 
 	fmt.Println("Day 9, Part 1:", total)
-
 }
 
-func getMissingNumber(intArray []int, previousIntArray []int) int {
+func getLastMissingNumber(intArray []int, previousIntArray []int) int {
 	for i := 0; i < len(intArray)-1; i++ {
 		if intArray[i] != intArray[i+1] {
 			newIntArray := getPreviousRow(previousIntArray)
 
-			newInt := getMissingNumber(previousIntArray, newIntArray)
+			newInt := getLastMissingNumber(previousIntArray, newIntArray)
 			previousIntArray = append(previousIntArray, newInt)
 			break
 		}
