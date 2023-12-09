@@ -18,79 +18,66 @@ const right = 'R'
 
 func Part1() {
 	lines := utils.GetLines("day10/input.txt")
-	currentPosition := position{-1, -1, 'N'}
 
-	for y, line := range lines {
-		startingPointFound := false
-		for x, value := range line {
-			if value == 'S' {
-				startingPointFound = true
-				currentPosition = position{x, y, 'N'}
-				break
-			}
-		}
-
-		if startingPointFound {
-			break
-		}
-	}
 	counter := 0
+	startingPointFound := false
 
+	currentPosition := findStartingPoint(lines)
 	direction := nextDirection(currentPosition, lines, 'N')
-	for currentPosition.value != 'S' {
+
+	for !startingPointFound {
 		currentPosition = move(lines, direction, currentPosition)
 		counter++
 		direction = nextDirection(currentPosition, lines, direction)
 
+		if currentPosition.value == 'S' {
+			startingPointFound = true
+			break
+		}
 	}
 
-	fmt.Println("Day 10, Part 1:", counter/2)
+	farthestDistance := counter / 2
+	fmt.Println("Day 10, Part 1:", farthestDistance)
 }
 
-func move(lines []string, direction rune, currentPosition position) position {
-	if direction == 'L' {
-		return moveLeft(currentPosition.value, currentPosition, lines)
-	} else if direction == 'R' {
-		return moveRight(currentPosition.value, currentPosition, lines)
-	} else if direction == 'U' {
-		return moveUp(currentPosition.value, currentPosition, lines)
-	} else if direction == 'D' {
-		return moveDown(currentPosition.value, currentPosition, lines)
+func findStartingPoint(lines []string) position {
+	for y, line := range lines {
+		for x, value := range line {
+			if value == 'S' {
+				return position{x, y, 'S'}
+			}
+		}
 	}
-	return position{currentPosition.x, currentPosition.y, currentPosition.value}
+	return position{-1, -1, 'N'}
 }
 
 func nextDirection(currentPosition position, lines []string, lastDirection rune) rune {
-	fmt.Println(string(lastDirection))
-	if currentPosition.x != 0 && lastDirection != 'R' {
-		moveLeft := lines[currentPosition.y][currentPosition.x-1]
-		stringValue := string(moveLeft)
-		fmt.Println(stringValue)
-		if moveLeft == '-' || moveLeft == 'L' || moveLeft == 'F' || moveLeft == 'S' {
-			return 'L'
-		}
+	if canMoveLeft(lines, lastDirection, currentPosition) {
+		return left
 	}
-	if currentPosition.x != len(lines[currentPosition.y])-1 && lastDirection != 'L' {
-		moveRight := lines[currentPosition.y][currentPosition.x+1]
-		stringValue := string(moveRight)
-		fmt.Println(stringValue)
-		if moveRight == '-' || moveRight == 'J' || moveRight == '7' || moveRight == 'S' {
-			return 'R'
-		}
+	if canMoveRight(lines, lastDirection, currentPosition) {
+		return right
 	}
-	if currentPosition.y != 0 && lastDirection != 'D' {
-		moveUp := lines[currentPosition.y-1][currentPosition.x]
-		if moveUp == '|' || moveUp == 'F' || moveUp == '7' || moveUp == 'S' {
-			return 'U'
-		}
+	if canMoveUp(lines, lastDirection, currentPosition) {
+		return up
 	}
-	if currentPosition.y != len(lines)-1 && lastDirection != 'U' {
-		moveDown := lines[currentPosition.y+1][currentPosition.x]
-		if moveDown == '|' || moveDown == 'L' || moveDown == 'J' || moveDown == 'S' {
-			return 'D'
-		}
+	if canMoveDown(lines, lastDirection, currentPosition) {
+		return down
 	}
 	return lastDirection
+}
+
+func move(lines []string, direction rune, currentPosition position) position {
+	if direction == left {
+		return moveLeft(currentPosition.value, currentPosition, lines)
+	} else if direction == right {
+		return moveRight(currentPosition.value, currentPosition, lines)
+	} else if direction == up {
+		return moveUp(currentPosition.value, currentPosition, lines)
+	} else if direction == down {
+		return moveDown(currentPosition.value, currentPosition, lines)
+	}
+	return position{currentPosition.x, currentPosition.y, currentPosition.value}
 }
 
 func moveDown(value rune, currentPosition position, lines []string) position {
@@ -107,4 +94,48 @@ func moveRight(value rune, currentPosition position, lines []string) position {
 
 func moveLeft(value rune, currentPosition position, lines []string) position {
 	return position{currentPosition.x - 1, currentPosition.y, rune(lines[currentPosition.y][currentPosition.x-1])}
+}
+
+func canMoveLeft(lines []string, lastDirection rune, currentPosition position) bool {
+	if currentPosition.x != 0 && lastDirection != 'R' &&
+		(currentPosition.value == 'S' || currentPosition.value == '7' || currentPosition.value == '-' || currentPosition.value == 'J') {
+		leftPosition := lines[currentPosition.y][currentPosition.x-1]
+		if leftPosition == '-' || leftPosition == 'L' || leftPosition == 'F' || leftPosition == 'S' {
+			return true
+		}
+	}
+	return false
+}
+
+func canMoveRight(lines []string, lastDirection rune, currentPosition position) bool {
+	if currentPosition.x != len(lines[currentPosition.y])-1 && lastDirection != 'L' &&
+		(currentPosition.value == 'S' || currentPosition.value == 'F' || currentPosition.value == '-' || currentPosition.value == 'L') {
+		rightPosition := lines[currentPosition.y][currentPosition.x+1]
+		if rightPosition == '-' || rightPosition == 'J' || rightPosition == '7' || rightPosition == 'S' {
+			return true
+		}
+	}
+	return false
+}
+
+func canMoveUp(lines []string, lastDirection rune, currentPosition position) bool {
+	if currentPosition.y != 0 && lastDirection != 'D' &&
+		(currentPosition.value == 'S' || currentPosition.value == 'J' || currentPosition.value == '|' || currentPosition.value == 'L') {
+		upPosition := lines[currentPosition.y-1][currentPosition.x]
+		if upPosition == '|' || upPosition == 'F' || upPosition == '7' || upPosition == 'S' {
+			return true
+		}
+	}
+	return false
+}
+
+func canMoveDown(lines []string, lastDirection rune, currentPosition position) bool {
+	if currentPosition.y != len(lines)-1 && lastDirection != 'U' &&
+		(currentPosition.value == 'S' || currentPosition.value == 'F' || currentPosition.value == '|' || currentPosition.value == '7') {
+		moveDown := lines[currentPosition.y+1][currentPosition.x]
+		if moveDown == '|' || moveDown == 'L' || moveDown == 'J' || moveDown == 'S' {
+			return true
+		}
+	}
+	return false
 }
