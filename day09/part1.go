@@ -28,14 +28,15 @@ func getLastMissingNumber(intArray []int, previousIntArray []int) int {
 		if intArray[i] != intArray[i+1] {
 			newIntArray := getPreviousRow(previousIntArray)
 
-			newInt := getLastMissingNumber(previousIntArray, newIntArray)
-			previousIntArray = append(previousIntArray, newInt)
+			previousMissingInt := getLastMissingNumber(previousIntArray, newIntArray)
+			previousIntArray = append(previousIntArray, previousMissingInt)
 			break
 		}
 	}
 
 	return intArray[len(intArray)-1] + previousIntArray[len(previousIntArray)-1]
 }
+
 func getPreviousRow(intArray []int) []int {
 	newIntArray := []int{}
 

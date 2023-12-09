@@ -30,14 +30,15 @@ func getFirstMissingNumber(intArray []int, previousIntArray []int) int {
 		if intArray[i] != intArray[i+1] {
 			newIntArray := getPreviousReverseRow(previousIntArray)
 
-			newInt := getFirstMissingNumber(previousIntArray, newIntArray)
-			previousIntArray = append(previousIntArray, newInt)
+			previousMissingInt := getFirstMissingNumber(previousIntArray, newIntArray)
+			previousIntArray = append(previousIntArray, previousMissingInt)
 			break
 		}
 	}
 
 	return intArray[len(intArray)-1] - previousIntArray[len(previousIntArray)-1]
 }
+
 func getPreviousReverseRow(intArray []int) []int {
 	newIntArray := []int{}
 
