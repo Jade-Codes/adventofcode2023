@@ -27,11 +27,8 @@ func Part2() {
 
 			if (value == '.') && inn {
 				counter++
-			} else {
-				fmt.Print(string(value))
 			}
 		}
-		fmt.Println()
 	}
 
 	fmt.Println("Day 10, Part 2:", counter)
