@@ -7,6 +7,8 @@ import (
 	"github.com/Jade-Codes/adventofcode2023/utils"
 )
 
+const expansion = 1000000
+
 func Part2() {
 	lines := utils.GetLines("day11/input.txt")
 
@@ -120,7 +122,7 @@ func getManhattanDistanceInSpace(a position, b position, space [][]rune) float64
 
 	for x := minX; x < maxX; x++ {
 		if space[minY][x] == 'Y' {
-			distance += 1000000
+			distance += expansion
 		} else {
 			distance++
 		}
@@ -128,7 +130,7 @@ func getManhattanDistanceInSpace(a position, b position, space [][]rune) float64
 
 	for y := minY; y < maxY; y++ {
 		if space[y][minX] == 'X' {
-			distance += 1000000
+			distance += expansion
 		} else {
 			distance++
 		}
