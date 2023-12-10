@@ -16,7 +16,7 @@ func Part2() {
 		countValue += count(sequence, numbers)
 	}
 
-	fmt.Println("Day 12, Part 1:", countValue)
+	fmt.Println("Day 12, Part 2:", countValue)
 }
 
 func parseFold(line string) (string, []int) {
