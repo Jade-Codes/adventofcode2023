@@ -13,21 +13,16 @@ func Part2() {
 	matrixes := [][][]rune{}
 
 	cycles := 1000000000
-	firstMatrix := make([][]rune, len(matrix))
 
 	for i := 0; i < cycles; i++ {
 		matrix = cycle(matrix)
 
-		if i > 1000 {
-
+		if i%1000 == 0 {
 			if matrixesContain(matrixes, matrix) {
-
-				if matrixMatch(firstMatrix, matrix) {
-
-					modulus := cycles % i
-					matrix = matrixes[modulus-1]
-					break
-				}
+				pattern, start := findRepeatablePattern(matrixes)
+				cycles = (cycles - start) % pattern
+				matrix = matrixes[start+cycles]
+				break
 			}
 		}
 
@@ -349,11 +344,14 @@ func matrixMatch(matrix1 [][]rune, matrix2 [][]rune) bool {
 	return true
 }
 
-func findCycle(matrixes [][][]rune, matrix [][]rune, cycle int) int {
-	for i, m := range matrixes {
-		if matrixMatch(m, matrix) {
-			return cycle - i
+func findRepeatablePattern(matrixes [][][]rune) (int, int) {
+	matrix := matrixes[len(matrixes)-1]
+
+	for i := len(matrixes) - 2; i >= 0; i-- {
+		if matrixMatch(matrixes[i], matrix) {
+			return len(matrixes) - i, i
 		}
 	}
-	return 0
+
+	return 0, 0
 }
