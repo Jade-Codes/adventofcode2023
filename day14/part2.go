@@ -17,12 +17,13 @@ func Part2() {
 	for i := 0; i < cycles; i++ {
 		matrix = cycle(matrix)
 
-		if i%1000 == 0 {
+		if i > 1000 {
 			if matrixesContain(matrixes, matrix) {
 				pattern, start := findRepeatablePattern(matrixes)
-				cycles = (cycles - start) % pattern
-				matrix = matrixes[start+cycles]
+				currentCycle := (cycles - start - 1) % pattern
+				matrix = matrixes[start+currentCycle]
 				break
+
 			}
 		}
 
