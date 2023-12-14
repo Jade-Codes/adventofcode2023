@@ -10,18 +10,18 @@ func Part2() {
 	lines := utils.GetLines("day14/input.txt")
 
 	matrix := getMatrix(lines)
-	matrixes := [][][]rune{}
+	cache := [][][]rune{}
 
 	cycles := 1000000000
 
 	for i := 0; i < cycles; i++ {
 		matrix = cycle(matrix)
 
-		if matrixesContain(matrixes, matrix) {
-			pattern, start := findRepeatablePattern(matrixes)
+		if cacheContain(cache, matrix) {
+			pattern, start := findRepeatablePattern(cache)
 			if pattern != 0 || start != 0 {
 				currentCycle := (cycles - start - 1) % (pattern - 1)
-				matrix = matrixes[start+currentCycle]
+				matrix = cache[start+currentCycle]
 				break
 			}
 
@@ -32,7 +32,7 @@ func Part2() {
 			newMatrix[i] = make([]rune, len(matrix[i]))
 			copy(newMatrix[i], matrix[i])
 		}
-		matrixes = append(matrixes, newMatrix)
+		cache = append(cache, newMatrix)
 	}
 
 	totalLoad := 0
@@ -325,8 +325,8 @@ func moveDown(matrix [][]rune, x int, y int) [][]rune {
 	return matrix
 }
 
-func matrixesContain(matrixes [][][]rune, matrix [][]rune) bool {
-	for _, m := range matrixes {
+func cacheContain(cache [][][]rune, matrix [][]rune) bool {
+	for _, m := range cache {
 		if matrixMatch(m, matrix) {
 			return true
 		}
@@ -345,12 +345,12 @@ func matrixMatch(matrix1 [][]rune, matrix2 [][]rune) bool {
 	return true
 }
 
-func findRepeatablePattern(matrixes [][][]rune) (int, int) {
-	matrix := matrixes[len(matrixes)-1]
+func findRepeatablePattern(cache [][][]rune) (int, int) {
+	matrix := cache[len(cache)-1]
 
-	for i := len(matrixes) - 2; i >= 0; i-- {
-		if matrixMatch(matrixes[i], matrix) {
-			return len(matrixes) - i, i
+	for i := len(cache) - 2; i >= 0; i-- {
+		if matrixMatch(cache[i], matrix) {
+			return len(cache) - i, i
 		}
 	}
 
