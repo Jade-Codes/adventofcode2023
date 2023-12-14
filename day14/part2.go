@@ -17,14 +17,14 @@ func Part2() {
 	for i := 0; i < cycles; i++ {
 		matrix = cycle(matrix)
 
-		if i > 1000 {
-			if matrixesContain(matrixes, matrix) {
-				pattern, start := findRepeatablePattern(matrixes)
-				currentCycle := (cycles - start - 1) % pattern
+		if matrixesContain(matrixes, matrix) {
+			pattern, start := findRepeatablePattern(matrixes)
+			if pattern != 0 || start != 0 {
+				currentCycle := (cycles - start - 1) % (pattern - 1)
 				matrix = matrixes[start+currentCycle]
 				break
-
 			}
+
 		}
 
 		newMatrix := make([][]rune, len(matrix))
