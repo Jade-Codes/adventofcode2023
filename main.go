@@ -15,6 +15,7 @@ import (
 	"github.com/Jade-Codes/adventofcode2023/day12"
 	"github.com/Jade-Codes/adventofcode2023/day13"
 	"github.com/Jade-Codes/adventofcode2023/day14"
+	"github.com/Jade-Codes/adventofcode2023/day15"
 )
 
 func main() {
@@ -46,4 +47,6 @@ func main() {
 	day13.Part2()
 	day14.Part1()
 	day14.Part2()
+	day15.Part1()
+	day15.Part2()
 }
