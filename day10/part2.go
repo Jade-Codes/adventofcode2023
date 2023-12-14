@@ -10,26 +10,40 @@ func Part2() {
 	lines := utils.GetLines("day10/input.txt")
 
 	counter := 0
-	for y, line := range lines {
-		inn := false
-		for x, value := range line {
-			firstDirection := 'N'
-			currentPosition := position{x, y, value}
-			currentDirection := nextDirection(currentPosition, lines, firstDirection)
+	startingPointFound := false
 
-			if currentDirection == 'N' {
-				value = '.'
-			}
+	currentPosition := findStartingPoint(lines)
+	direction := nextDirection(currentPosition, lines, 'N')
+	positions := []position{}
+	positions = append(positions, currentPosition)
 
-			if value == '|' || value == 'J' || value == 'L' {
-				inn = !inn
-			}
+	for !startingPointFound {
+		currentPosition = move(lines, direction, currentPosition)
+		counter++
+		direction = nextDirection(currentPosition, lines, direction)
 
-			if (value == '.') && inn {
-				counter++
-			}
+		if currentPosition.value == 'S' {
+			startingPointFound = true
+			break
+		}
+
+		positions = append(positions, currentPosition)
+	}
+
+	shoelace := 0
+
+	for i := 0; i < len(positions); i++ {
+
+		if i == len(positions)-1 {
+			shoelace += (positions[i].x + positions[0].x) * (positions[i].y - positions[0].y)
+		} else {
+			shoelace += (positions[i].x + positions[i+1].x) * (positions[i].y - positions[i+1].y)
 		}
 	}
 
-	fmt.Println("Day 10, Part 2:", counter)
+	shoeLaceArea := shoelace / 2
+
+	innerArea := shoeLaceArea - len(positions)/2 + 1
+
+	fmt.Println("Day 10, Part 2:", innerArea)
 }
