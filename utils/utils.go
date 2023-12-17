@@ -44,3 +44,13 @@ func MultiplyArray(array []int) int {
 	}
 	return total
 }
+
+func GetMatrix(lines []string) [][]rune {
+	matrix := [][]rune{}
+
+	for _, line := range lines {
+		matrix = append(matrix, []rune(line))
+	}
+
+	return matrix
+}

@@ -9,7 +9,7 @@ import (
 func Part1() {
 	lines := utils.GetLines("day14/input.txt")
 
-	matrix := getMatrix(lines)
+	matrix := utils.GetMatrix(lines)
 
 	for y, line := range matrix {
 		for x, _ := range line {
@@ -28,16 +28,6 @@ func Part1() {
 	}
 
 	fmt.Println("Day 14, Part 1:", totalLoad)
-}
-
-func getMatrix(lines []string) [][]rune {
-	matrix := [][]rune{}
-
-	for _, line := range lines {
-		matrix = append(matrix, []rune(line))
-	}
-
-	return matrix
 }
 
 func move(matrix [][]rune, x int, y int) [][]rune {

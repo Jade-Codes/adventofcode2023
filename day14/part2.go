@@ -9,7 +9,7 @@ import (
 func Part2() {
 	lines := utils.GetLines("day14/input.txt")
 
-	matrix := getMatrix(lines)
+	matrix := utils.GetMatrix(lines)
 	cache := [][][]rune{}
 
 	cycles := 1000000000
