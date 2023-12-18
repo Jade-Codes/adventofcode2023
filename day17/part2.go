@@ -21,7 +21,7 @@ func Part2() {
 
 	heatLoss := findLowestHeatLossWithUltra(matrix)
 
-	fmt.Println("Day 17, Part 1:", heatLoss)
+	fmt.Println("Day 17, Part 2:", heatLoss)
 }
 
 func findLowestHeatLossWithUltra(matrix [][]int) int {
