@@ -2,6 +2,7 @@ package day18
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 
@@ -21,39 +22,40 @@ func Part2() {
 
 		direction, moveCount := convertHexToInt(options[2])
 
-		for i := 0; i < moveCount; i++ {
-			if direction == 'R' {
-				current.x++
-			}
-			if direction == 'L' {
-				current.x--
-			}
-			if direction == 'U' {
-				current.y++
-			}
-			if direction == 'D' {
-				current.y--
-			}
-			locations = append(locations, Location{current.x, current.y})
+		if direction == 'R' {
+			current.x = current.x + moveCount
 		}
+		if direction == 'L' {
+			current.x = current.x - moveCount
+		}
+		if direction == 'U' {
+			current.y = current.y - moveCount
+		}
+		if direction == 'D' {
+			current.y = current.y + moveCount
+		}
+		locations = append(locations, Location{current.x, current.y})
 	}
 
 	shoelace := 0
+	circumference := float64(0)
 
 	for i, location := range locations {
 
 		if i == len(locations)-1 {
-			shoelace += (location.x + locations[0].x) * (location.y - locations[0].y)
+			shoelace += (location.x - locations[0].x) * (location.y + locations[0].y)
+			circumference += math.Abs(float64(location.x)-float64(locations[0].x)) + math.Abs(float64(location.y)-float64(locations[0].y))
 		} else {
-			shoelace += (location.x + locations[i+1].x) * (location.y - locations[i+1].y)
+			shoelace += (location.x - locations[i+1].x) * (location.y + locations[i+1].y)
+			circumference += math.Abs(float64(location.x)-float64(locations[i+1].x)) + math.Abs(float64(location.y)-float64(locations[i+1].y))
 		}
 	}
 
 	shoeLaceArea := shoelace / 2
 
-	innerArea := shoeLaceArea - len(locations)/2 + 1
+	innerArea := shoeLaceArea - int(circumference)/2 + 1
 
-	totalArea := len(locations) + innerArea - 1
+	totalArea := innerArea + int(circumference)
 
 	fmt.Println("Day 18, Part 2:", totalArea)
 }
